@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 
 @RestController
-@RequestMapping("/api/v1/holidaypay")
+@RequestMapping("/api/v1/vacationpay")
 public class VacationPayController {
 
     private VacationPayService holidayPayService;
