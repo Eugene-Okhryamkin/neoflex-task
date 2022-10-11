@@ -9,11 +9,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.time.DayOfWeek.*;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class VacationPayService {
 
-    private int calculateAmountOfHolidays(LocalDate startDate, LocalDate endDate) {
+    private int calculateAmountOfVacations(LocalDate startDate, LocalDate endDate) {
+        int differenceDays = (int) DAYS.between(startDate, endDate);
+
         //dates actually for
         final Set<LocalDate> holidays = Set.of(
                 LocalDate.of(2022, 1, 1),
@@ -37,14 +40,17 @@ public class VacationPayService {
                 MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY
         );
 
-        return (int) startDate.datesUntil(endDate)
+        int daysWithoutHolidays = (int) startDate.datesUntil(endDate)
                         .filter(t -> businessDays.contains(t.getDayOfWeek()))
                         .filter(t -> !holidays.contains(t)).collect(Collectors.toList()).stream().count();
+
+
+        return (differenceDays - daysWithoutHolidays) + differenceDays;
     }
 
     public double calculate(double averageSalary, LocalDate startDate, LocalDate endDate) {
-        System.out.println(calculateAmountOfHolidays(startDate, endDate));
-        return (averageSalary / 29.3) * calculateAmountOfHolidays(startDate, endDate);
+        System.out.println(calculateAmountOfVacations(startDate, endDate));
+        return (averageSalary / 29.3) * calculateAmountOfVacations(startDate, endDate);
     }
 
     public double calculate(double averageSalary, int amountOfHolidays) {
